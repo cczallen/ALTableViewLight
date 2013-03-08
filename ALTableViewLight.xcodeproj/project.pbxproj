@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		730B529216E99B420080049D /* ALTableViewLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 730B529116E99B420080049D /* ALTableViewLight.m */; };
 		73ECABC616B918D200752CB3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73ECABC516B918D200752CB3 /* UIKit.framework */; };
 		73ECABC816B918D200752CB3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73ECABC716B918D200752CB3 /* Foundation.framework */; };
 		73ECABCA16B918D200752CB3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73ECABC916B918D200752CB3 /* CoreGraphics.framework */; };
@@ -49,6 +50,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		730B529016E99B420080049D /* ALTableViewLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTableViewLight.h; sourceTree = "<group>"; };
+		730B529116E99B420080049D /* ALTableViewLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALTableViewLight.m; sourceTree = "<group>"; };
 		73ECABC116B918D200752CB3 /* ALTableViewLight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ALTableViewLight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73ECABC516B918D200752CB3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		73ECABC716B918D200752CB3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -235,6 +238,8 @@
 				73ECAC2216B919B500752CB3 /* ALTableViewController.h */,
 				73ECAC2316B919B500752CB3 /* ALTableViewController.m */,
 				73ECAC2416B919B500752CB3 /* ALTableViewController.xib */,
+				730B529016E99B420080049D /* ALTableViewLight.h */,
+				730B529116E99B420080049D /* ALTableViewLight.m */,
 				73ECAC2516B919B500752CB3 /* ALTextField.h */,
 				73ECAC2616B919B500752CB3 /* ALTextField.m */,
 				73ECAC2716B919B500752CB3 /* ALTextView.h */,
@@ -378,6 +383,7 @@
 				73ECAC6916B91F7200752CB3 /* BUIControl.m in Sources */,
 				73ECAC6A16B91F7200752CB3 /* BUIView.m in Sources */,
 				73ECAC6B16B91F7200752CB3 /* ZXObject.m in Sources */,
+				730B529216E99B420080049D /* ALTableViewLight.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

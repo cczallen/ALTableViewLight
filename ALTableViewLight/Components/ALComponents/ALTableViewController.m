@@ -7,7 +7,7 @@
 //
 
 #import "ALTableViewController.h"
-
+#import "ALTableViewLight.h"
 
 @implementation ALTableViewController
 @synthesize  tableView = _tableView;
@@ -190,5 +190,38 @@
     return YES;
 }
 */
+
+@end
+
+
+
+
+
+@implementation ALTableViewLightController
+
+
++ (ALTableViewLightController *)tableViewControllerWithDataArray:(NSArray *)dataArray
+												  didSelectBlock:(ALTableViewLightDidSelectBlock)didSelectBlock	{
+	return [self tableViewControllerWithDataArray:dataArray rowHeight:44 didSelectBlock:didSelectBlock];
+}
+
++ (ALTableViewLightController *)tableViewControllerWithDataArray:(NSArray *)dataArray
+													   rowHeight:(CGFloat)rowHeight
+												  didSelectBlock:(ALTableViewLightDidSelectBlock)didSelectBlock	{
+	ALTableViewLightController * controller = [[ALTableViewLightController alloc] init];
+	
+	ALTableViewLight * tv = [ALTableViewLight tableViewWithDataArray:dataArray rowHeight:rowHeight didSelectBlock:didSelectBlock];
+	[controller setTableViewLight:tv];
+	[controller setView:controller.tableViewLight];
+	
+	return controller;
+}
+
+- (void)selectIndex:(NSInteger)index	{
+	[self.tableViewLight selectIndex:index];
+}
+- (void)setCheckmarkOnIndex:(NSInteger)index enabled:(BOOL)enabled	{
+	[self.tableViewLight setCheckmarkOnIndex:index enabled:enabled];
+}
 
 @end

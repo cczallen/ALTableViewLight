@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ALViewController.h"
+#import "ALTableViewLight.h"
 
 @interface FirstViewController : ALViewController
 @property (strong, nonatomic) ALTableViewLight *tableView;

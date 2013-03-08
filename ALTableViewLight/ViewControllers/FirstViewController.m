@@ -14,7 +14,11 @@
 
 @implementation FirstViewController
 
-- (void)loadView	{
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view, typically from a nib.
+
 	//data
 	NSArray * dataArray = @[@"1",@"2",@"3",@"a",@"b",@"c"];
 	
@@ -23,7 +27,9 @@
 		[[[UIAlertView alloc] initWithTitle:@"Select:" message:[NSString stringWithFormat:@"%@" , dataObj] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 	}];
 	[tableview.tableView setBackgroundColor:[UIColor scrollViewTexturedBackgroundColor]];
-	[self setView:tableview];
+	[tableview setCheckmarkOnIndex:0 enabled:YES];
+	[tableview setCheckmarkOnIndex:2 enabled:YES];
+	[self.view addSubview:tableview];
 	NSLog(@"LOG:  tableview: %@",tableview);
 	
 	//frame
@@ -31,17 +37,9 @@
 	if (isIPadUI) {
 		rect = CGRectMake(200, 300, 400, 500);
 	}else	{
-		rect = CGRectInset(self.view.frame, 20, 155);
+		rect = CGRectInset(self.view.frame, 20, 140);
 	}
 	[tableview setFrame:rect];
-	
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-	
 }
 
 - (void)didReceiveMemoryWarning

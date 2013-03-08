@@ -9,7 +9,6 @@
 #import "ALView.h"
 #import "Define.h"
 #import <QuartzCore/QuartzCore.h>
-#import <objc/runtime.h>
 
 @implementation ALView
 
@@ -172,9 +171,14 @@
 
 
 @implementation UIButton (BackgroundStyle)
+
 - (void)setBackgroundStyleDefault	{
 	NSString * bgImgName = @"blackButton";
 	[self setBackgroundStyleByName:bgImgName];
+}
+- (void)setBlackBackgroundAndRedFont	{
+	[self setBackgroundStyleDefault];
+	[self setTitleColor:[UIColor colorWithRed:0.988 green:0.323 blue:0.347 alpha:1.000] forState:(UIControlStateNormal)];
 }
 
 - (void)setBackgroundStyleByName:(NSString *)bgImgName	{
@@ -198,86 +202,3 @@
 
 @end
 
-
-@implementation ALTableViewLight
-
-+ (ALTableViewLight *)tableViewWithDataArray:(NSArray *)dataArray
-							  didSelectBlock:(ALTableViewLightDidSelectBlock)didSelectBlock	{
-	
-	return [self tableViewWithDataArray:dataArray rowHeight:44 didSelectBlock:didSelectBlock];
-}
-+ (ALTableViewLight *)tableViewWithDataArray:(NSArray *)dataArray
-								   rowHeight:(CGFloat)rowHeight
-							  didSelectBlock:(ALTableViewLightDidSelectBlock)didSelectBlock	{
-	
-	ALTableViewLight * tableViewLight = [[self alloc] init];
-	[tableViewLight setDataArray:dataArray];
-	[tableViewLight.tableView setRowHeight:rowHeight];
-	[tableViewLight setDidSelectBlock:didSelectBlock];
-	
-	return tableViewLight;
-}
-
-
-- (void)myInit	{
-	[super myInit];
-	
-	CGRect rect = self.bounds;
-	UITableView * tv = [[UITableView alloc] initWithFrame:rect];
-	[tv setAutoresizingMask:(UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight)];
-	[tv setDataSource:self];
-	[tv setDelegate:self];
-	[self setTableView:tv];
-	[self addSubview:self.tableView];
-}
-
-
-
-- (void)selectIndex:(NSInteger)index	{	
-	[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] animated:YES scrollPosition:(UITableViewScrollPositionTop)];
-}
-
-
-#pragma mark - Table view data source & delegate
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView	{
-    return 1;
-}
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section	{
-    return [self.dataArray count];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    
-    // Configure the cell...
-	NSInteger myRow = indexPath.row;
-	NSString * str = [self.dataArray objectAtIndex:myRow];
-	[cell.textLabel setText:str];
-	
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath	{
-	NSInteger myRow = indexPath.row;
-	NSString * str = [self.dataArray objectAtIndex:myRow];
-	
-    if (self.didSelectBlock) {
-		self.didSelectBlock(myRow , str);
-	}
-}
-
-//override
-- (NSString *)description	{
-	NSString * description = [super description];
-	description = [description stringByAppendingFormat:@"\nDataArray:%@", self.dataArray];
-	
-	return description;
-}
-
-@end

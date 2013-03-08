@@ -51,24 +51,9 @@ UIKIT_STATIC_INLINE BOOL ALBorderSetIsEmpty(ALBorderSet set) {
 @interface UIButton (BackgroundStyle)
 
 - (void)setBackgroundStyleDefault;
+- (void)setBlackBackgroundAndRedFont;
 - (void)setBackgroundStyleByName:(NSString *)bgImgName;
 
 @end
 
-typedef void(^ALTableViewLightDidSelectBlock)(NSInteger index , id dataObj);
 
-@interface ALTableViewLight : ALView <UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic ,strong) UITableView * tableView;
-@property (nonatomic ,strong) NSArray * dataArray;
-@property (nonatomic, copy) ALTableViewLightDidSelectBlock didSelectBlock;
-
-+ (ALTableViewLight *)tableViewWithDataArray:(NSArray *)dataArray
-							  didSelectBlock:(ALTableViewLightDidSelectBlock)didSelectBlock;
-
-+ (ALTableViewLight *)tableViewWithDataArray:(NSArray *)dataArray
-								   rowHeight:(CGFloat)rowHeight
-							  didSelectBlock:(ALTableViewLightDidSelectBlock)didSelectBlock;
-
-- (void)selectIndex:(NSInteger)index;
-
-@end
