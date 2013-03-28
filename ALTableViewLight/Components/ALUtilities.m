@@ -1,6 +1,6 @@
 //
 //  ALUtilities.m
-//  
+//
 //
 //  Created by AllenLion on 12/9/18.
 //  Copyright (c) 2012年 AllenLee. All rights reserved.
@@ -19,6 +19,9 @@ UIKIT_EXTERN NSString *NSStringFromInt(NSInteger num)	{
 UIKIT_EXTERN NSString *NSStringFromFloat(CGFloat num)	{
 	NSString * strNum = [NSString stringWithFormat:@"%f",num];
 	return strNum;
+}
+UIKIT_EXTERN double km2mile(double km)	{
+	return km * 0.62137119;
 }
 
 static int indentLevelForLog = 0;		//for NSArray log
@@ -68,6 +71,50 @@ static int indentLevelForLog = 0;		//for NSArray log
 +(void)runBlockAfterDelay:(NSTimeInterval)delay block:(void (^)(void))block	{
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC*delay),	\
 				   dispatch_get_main_queue(), block);
+}
+
+//background task
+#define isMultitaskingSupported		(([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)])? [UIDevice currentDevice].multitaskingSupported : NO)
+UIBackgroundTaskIdentifier backgroundTask;
++ (void)beginBackgroundTask	{
+	if (isMultitaskingSupported == NO) {
+		return;
+	}
+	
+	if (!backgroundTask || backgroundTask == UIBackgroundTaskInvalid) {
+		id __weak weakSelf = self;
+		backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+			// Synchronize the cleanup call on the main thread in case
+			// the task actually finishes at around the same time.
+			[weakSelf beginBackgroundTask];
+		}];
+	}
+}
++ (void)beginBackgroundTaskWithUnlimitedTime	{
+	if (isMultitaskingSupported == NO) {
+		return;
+	}
+	
+	if (!backgroundTask || backgroundTask == UIBackgroundTaskInvalid) {
+		id __weak weakSelf = self;
+		backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+			// Synchronize the cleanup call on the main thread in case
+			// the task actually finishes at around the same time.
+			[weakSelf endBackgroundTask];
+		}];
+	}
+}
++ (void)endBackgroundTask	{
+	if (isMultitaskingSupported == NO) {
+		return;
+	}
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if (backgroundTask != UIBackgroundTaskInvalid) {
+			[[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
+			backgroundTask = UIBackgroundTaskInvalid;
+		}
+	});
 }
 
 //檢核用
@@ -209,12 +256,17 @@ static NSTimeInterval activityStartTime;
 		}
 	}
 	
-//	return [[view retain] autorelease];
+	//	return [[view retain] autorelease];
 	return view;
 }
 
 + (id)creatViewControllerByStoryboardID:(NSString *)stroyboardID	{
+	
+#ifdef Version_Campus
+	return [[self class] creatViewControllerByStoryboardID:stroyboardID andStoryboardName:@"MainStoryboard_Version_Campus_iPhone"];	//MainStoryboard
+#else
 	return [[self class] creatViewControllerByStoryboardID:stroyboardID andStoryboardName:@"MainStoryboard_iPhone"];	//MainStoryboard
+#endif
 }
 + (id)creatViewControllerByStoryboardID:(NSString *)stroyboardID andStoryboardName:(NSString *)stroyboardName	{
 	UIStoryboard * mainStroyboard = [UIStoryboard storyboardWithName:stroyboardName bundle:nil];
@@ -267,6 +319,52 @@ static NSTimeInterval activityStartTime;
 	return date;
 }
 
++ (CGRect)getSquareRect:(CGRect)rect	{
+	
+	CGFloat width = MIN(rect.size.width, rect.size.height);
+	if (width == rect.size.width && width == rect.size.height) {
+		return rect;
+	}
+	CGFloat x = 0, y = 0;
+	BOOL isLandscape = rect.size.width > rect.size.height;
+	if (isLandscape) {
+		x = (rect.size.width - width) *0.5;
+	}else	{
+		y = (rect.size.height - width) *0.5;
+	}
+	
+	CGRect newRect = CGRectMake(x, y, width, width);
+	return newRect;
+}
+
+//+ (NSString *)MyPhoneNumber {		//http://stackoverflow.com/questions/193182/programmatically-get-own-phone-number-in-iphone-os
+//	NSString * phone = CTSettingCopyMyPhoneNumber();
+//	if (phone == nil) {
+//		NSLog(@"LOG:  phone == nil");
+//		return nil;
+//	}
+//	return phone;
+//}
++ (BOOL)call:(NSString *)strNumber	{
+	
+	//	//1
+	//	NSString * strURL = [NSString stringWithFormat:@"tel:%@" , strNumber];
+	//	UIWebView * webview = [[UIWebView alloc] init];
+	//	[webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:strURL]]];
+	
+	//2
+	strNumber = [strNumber stringByReplacingOccurrencesOfString:@" " withString:@""];
+	strNumber = [strNumber stringByReplacingOccurrencesOfString:@")" withString:@""];
+	strNumber = [strNumber stringByReplacingOccurrencesOfString:@"(" withString:@""];
+	strNumber = [strNumber stringByReplacingOccurrencesOfString:@"-" withString:@""];
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"telprompt:%@" , strNumber]];
+	if ([[UIApplication sharedApplication] canOpenURL:url]) {
+		[[UIApplication sharedApplication] openURL:url];
+		return YES;
+	}else	{
+		return NO;
+	}
+}
 @end
 
 
@@ -374,7 +472,7 @@ static NSTimeInterval activityStartTime;
  return nil;
  }
  }
-
+ 
  */
 
 -(UIViewController *)findNearestViewController	{
@@ -392,9 +490,13 @@ static NSTimeInterval activityStartTime;
 		
 	} while ( ![targetView.nextResponder isKindOfClass:[UIViewController class]] );
 	
-	targetViewController = (UIViewController *)targetView.nextResponder;
 	
-	return targetViewController;
+	if ([targetView.nextResponder isKindOfClass:[UIViewController class]]) {
+		targetViewController = (UIViewController *)targetView.nextResponder;
+		return targetViewController;
+	}else	{
+		return nil;
+	}
 }
 
 -(UIView *)findNearestViewControllersView	{
@@ -492,6 +594,9 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 + (void)setCAAnimationDuration:(NSTimeInterval)dura	{	//20120604
 	CAAnimDuraion = dura;
 }
++ (NSTimeInterval)getCAAnimationDuration	{	// 20130221
+	return CAAnimDuraion;
+}
 - (void)addCAAnimationFromTop	{
 	[self addCAAnimationBykCATransitionFrom:kCATransitionFromTop];
 }
@@ -588,13 +693,13 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 }
 
 + (UIImage *)reSizeImage:(UIImage *)image toSize:(CGSize)reSize	{
-
+	
 	UIGraphicsBeginImageContext(CGSizeMake(reSize.width, reSize.height));
 	[image drawInRect:CGRectMake(0, 0, reSize.width, reSize.height)];
 	UIImage *reSizeImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	return reSizeImage;
-
+	
 //	return [image resizedImage:reSize interpolationQuality:(kCGInterpolationDefault)];
 }
 
@@ -606,13 +711,16 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 	NSString * path = [[NSBundle mainBundle] pathForResource:imgName ofType:@"png"];
 	return [UIImage imageWithContentsOfFile:path];
 }
-- (UIImage *)imageWithCropToSquare	{
+//- (UIImage *)imageWithCropToSquareScaleAspectFill	{
+//	UIImage * image = [self croppedImage:[ALUtilities getSquareRect:CGRectMake(0, 0, self.size.width, self.size.height)]];
+//	return image;
+//}
+//- (UIImage *)imageWithCropToSquare	{
+- (UIImage *)imageWithCropToSquareScaleAspectFit	{
 	
 	CGFloat minSize = MIN(self.size.width, self.size.height);
 	CGFloat maxSize = MAX(self.size.width, self.size.height);
 	BOOL isLandscape = (maxSize == self.size.width);
-	
-//	CGImageRef subImageRef = CGImageCreateWithImageInRect(self.CGImage, [self bounds]);
 	
 	UIGraphicsBeginImageContext(CGSizeMake(maxSize, maxSize));
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
@@ -628,13 +736,13 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 		rect.origin.x = offset;
 		rect.size.width -=offset*2;
 	}
-//	NSLog(@"LOG:  rect:%@", NSStringFromCGRect(rect));
-
+	//	NSLog(@"LOG:  rect:%@", NSStringFromCGRect(rect));
+	
 	//background color
-//	[[UIColor blackColor] set];
-//	CGContextFillRect(ctx, CGRectMake(0, 0, maxSize, maxSize));
+	//	[[UIColor blackColor] set];
+	//	CGContextFillRect(ctx, CGRectMake(0, 0, maxSize, maxSize));
 	CGContextDrawImage(ctx, rect, self.CGImage);
-
+	
 	UIImage * cropedImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	
@@ -700,27 +808,27 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 
 
 /*
-//---- setClickAction
-#import <objc/runtime.h>
-
-@implementation NSObject (BlockTargetAction)
-- (void)startBlock {
-    (((void (^)(void)) self)());
-}
-- (id)copyWithOwner:(NSObject *)owner {
-    // copy ourself to the heap
-    self = [[self copy] autorelease];
-	
-    // this key is unique until self is deallocated,
-    // so it should last as long as the owner does
-    void *key = (void *) self;
-	
-    // automatically released when the owner object is deallocated
-    objc_setAssociatedObject(owner, key, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    return objc_getAssociatedObject(owner, key);
-}
-@end
-*/
+ //---- setClickAction
+ #import <objc/runtime.h>
+ 
+ @implementation NSObject (BlockTargetAction)
+ - (void)startBlock {
+ (((void (^)(void)) self)());
+ }
+ - (id)copyWithOwner:(NSObject *)owner {
+ // copy ourself to the heap
+ self = [[self copy] autorelease];
+ 
+ // this key is unique until self is deallocated,
+ // so it should last as long as the owner does
+ void *key = (void *) self;
+ 
+ // automatically released when the owner object is deallocated
+ objc_setAssociatedObject(owner, key, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+ return objc_getAssociatedObject(owner, key);
+ }
+ @end
+ */
 @implementation UIButton (BlockTargetAction)
 - (void)setClickAction:(void (^)(id sender))action	{
 	[self handleControlEvent:(UIControlEventTouchUpInside) withBlock:action];
@@ -730,46 +838,83 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 	[self removeHandlerForEvent:(UIControlEventTouchUpInside)];
 }
 
-/*-(void)setClickAction:(void (^)(id sender))action	{
-
-	[self removeClickAction];	//20120509
-	
-	[self addTarget:[action copyWithOwner:self]
-			 action:@selector(startBlock)
-   forControlEvents:(UIControlEventTouchUpInside)
-	 ];
+-(void)clickAction	{	// 20130315
+	[self performSelector:@selector(UIControlEventTouchUpInside)];
 }
 
--(void)removeClickAction	{
-	UIButton * bt = self;
-	for (id target in [bt allTargets]) {
-		if ([target isKindOfClass:NSClassFromString(@"__NSMallocBlock__")]) {
-			[bt removeTarget:target action:NULL forControlEvents:(UIControlEventTouchUpInside)];
-			
-//			void *key = (void *) target;
-			void *key = (__bridge void *) target;
-
-			objc_setAssociatedObject(bt, key, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-		}
-	}
-}*/
+/*-(void)setClickAction:(void (^)(id sender))action	{
+ 
+ [self removeClickAction];	//20120509
+ 
+ [self addTarget:[action copyWithOwner:self]
+ action:@selector(startBlock)
+ forControlEvents:(UIControlEventTouchUpInside)
+ ];
+ }
+ 
+ -(void)removeClickAction	{
+ UIButton * bt = self;
+ for (id target in [bt allTargets]) {
+ if ([target isKindOfClass:NSClassFromString(@"__NSMallocBlock__")]) {
+ [bt removeTarget:target action:NULL forControlEvents:(UIControlEventTouchUpInside)];
+ 
+ //			void *key = (void *) target;
+ void *key = (__bridge void *) target;
+ 
+ objc_setAssociatedObject(bt, key, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+ }
+ }
+ }*/
+@end
+@implementation UIButton (ALRoundedButton)
++ (UIButton *)createRoundedButtonWithFrame:(CGRect)rect	{
+	UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+	[button setFrame:rect];
+	
+	UIView * bgView = [[UIView alloc] initWithFrame:button.bounds];
+//	[bgView setBackgroundColor:BackgroundPatternColor_gray_jean];
+	UIView * blueView = [[UIView alloc] initWithFrame:bgView.bounds];
+	[blueView setBackgroundColor:[UIColor colorWithRed:0.000 green:0.386 blue:0.991 alpha:1.000]];
+	[blueView setAlpha:0.85];
+	[bgView addSubview:blueView];
+	[bgView.layer setCornerRadius:9];
+	[bgView.layer setBorderWidth:1];
+	[bgView.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+	[bgView.layer setMasksToBounds:YES];
+	UIImage * img = [UIImage captureImageFromView:bgView];
+	
+	[button setBackgroundImage:img forState:(UIControlStateHighlighted)];
+//	[button setBackgroundColor:BackgroundPatternColor_gray_jean];
+//	[button setTitleColor:ColorForUIRoundedButtonTitle forState:UIControlStateNormal];
+	[button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+	[button.titleLabel setFont:[UIFont boldSystemFontOfSize:[UIFont systemFontSize]]];
+	[button.layer setCornerRadius:9];
+	[button.layer setBorderWidth:1];
+	[button.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+	
+	return button;
+}
 @end
 
 
 @implementation NSMutableDictionary (formatVersion)
 - (BOOL)writeToFile:(NSString *)path atomically:(BOOL)useAuxiliaryFile formatVersion:(NSString *)version	{
 	
-	[self setValue:version forKey:@"formatVersion"];
+	[self setValue:version forKey:@"_formatVersion"];
 	return [self writeToFile:path atomically:useAuxiliaryFile];
 }
 - (NSString *)getFormatVersion	{
 	
-	NSString * version = [self valueForKey:@"formatVersion"];
+	NSString * version = [self valueForKey:@"_formatVersion"];
 	return version;
 }
 - (void)removeFormatVersion	{
 	
-	[self removeObjectForKey:@"formatVersion"];
+	//	if ( [self isMemberOfClass:[NSMutableDictionary class]] ) {
+	//
+	//		[(NSMutableDictionary *)self removeObjectForKey:@"formatVersion"];
+	//	}
+	[self removeObjectForKey:@"_formatVersion"];
 }
 @end
 
@@ -777,7 +922,7 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 @implementation NSArray (Unicode)
 - (NSString*)description
 {
-    __weak NSMutableString* desc = [NSMutableString stringWithString:@"(\n"];
+    NSMutableString* __weak desc = [NSMutableString stringWithString:@"(\n"];
 	indentLevelForLog++;
     [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [desc appendFormat:@"	%@,\n",[obj description]];
@@ -793,7 +938,7 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 @implementation NSDictionary (Unicode)
 - (NSString*)description
 {
-    __weak NSMutableString* desc = [NSMutableString stringWithString:@"{\n"];
+    NSMutableString* desc __weak = [NSMutableString stringWithString:@"{\n"];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         [desc appendFormat:@"%@ = %@,\n",key,[obj description]];
     }];
@@ -812,18 +957,15 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 	}];
 	return keys;
 }
+- (NSArray *)sortedKeysByAscending	{
+	NSArray * keys = [[self allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+		return [obj1 compare:obj2];
+	}];
+	return keys;
+}
 @end
 
 @implementation NSString (verifyCheck)
-- (BOOL)find:(NSString *)str	{
-	BOOL find = NO;
-	if ([str length]>0 && [self length]>0 ) {
-		if ([self rangeOfString:str].location != NSNotFound) {
-			find = YES;
-		}
-	}
-	return find;
-}
 - (NSString *)trim	{
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
@@ -931,6 +1073,23 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 	return isPID_OK;
 }
 
+#import <CommonCrypto/CommonDigest.h>
+- (NSString*)stringFromSha256	{
+	NSString * clear = self;
+	const char *s=[clear cStringUsingEncoding:NSASCIIStringEncoding];
+	NSData *keyData=[NSData dataWithBytes:s length:strlen(s)];
+	
+	uint8_t digest[CC_SHA256_DIGEST_LENGTH]={0};
+	CC_SHA256(keyData.bytes, keyData.length, digest);
+	NSData *out=[NSData dataWithBytes:digest length:CC_SHA256_DIGEST_LENGTH];
+	NSString *hash=[out description];
+	hash = [hash stringByReplacingOccurrencesOfString:@" " withString:@""];
+	hash = [hash stringByReplacingOccurrencesOfString:@"<" withString:@""];
+	hash = [hash stringByReplacingOccurrencesOfString:@">" withString:@""];
+	
+	return hash;
+}
+
 @end
 
 
@@ -938,11 +1097,11 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 @implementation NSObject (descriptionMemberList)
 //override//
 
-/*- (NSString *)descriptionMemberList	{
-	//	return [DescriptionBuilder reflectDescription:self];
-	return [DescriptionBuilder reflectDescriptionWithSuperClass:self style:(DescriptionStyleMultiLine)];
-}
-
+//- (NSString *)descriptionMemberList	{
+//	//	return [DescriptionBuilder reflectDescription:self];
+//	return [DescriptionBuilder reflectDescriptionWithSuperClass:self style:(DescriptionStyleMultiLine)];
+//}
+/*
  - (NSString *)descriptionMemberList	{
  
  NSMutableString * iVarList = [NSMutableString string];
@@ -969,8 +1128,8 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 
 @end
 
-/*
-@implementation MKMapView (zoomToFitMapAnnotations)
+
+/*@implementation MKMapView (zoomToFitMapAnnotations)
 
 - (void)zoomToFitMapAnnotations	{
 	[self zoomToFitMapAnnotations:self];
@@ -1018,12 +1177,12 @@ static NSTimeInterval CAAnimDuraion = 0.0;
 }
 
 - (void)moveToCoordinateWithAnimation:(CLLocationCoordinate2D)coor	{
-	MKCoordinateSpan span = MKCoordinateSpanMake(0.004, 0.004);
+	MKCoordinateSpan span = MKCoordinateSpanMake(0.005, 0.005);
 	MKCoordinateRegion region = MKCoordinateRegionMake(coor, span);
 	[self setRegion:region animated:YES];
 }
-@end
-*/
+@end*/
+
 
 
 @implementation UILabel (alignTop)
@@ -1062,4 +1221,64 @@ static NSTimeInterval CAAnimDuraion = 0.0;
     [comp1 year]  == [comp2 year];
 }
 
+@end
+
+
+@implementation UIImagePickerController (ios6rotate)
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+	return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+	//	return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations	{	//NS_AVAILABLE_IOS(6_0);
+	//	return UIInterfaceOrientationMaskAll;
+	return (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown);
+}
+@end
+
+/*@implementation MFMessageComposeViewController (ios6rotate)
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
+	return YES;
+}
+- (NSUInteger)supportedInterfaceOrientations	{	//NS_AVAILABLE_IOS(6_0);
+	return (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown);
+}
+@end
+
+@implementation ABPeoplePickerNavigationController (ios6rotate)
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
+	return YES;
+}
+- (NSUInteger)supportedInterfaceOrientations	{	//NS_AVAILABLE_IOS(6_0);
+	return (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown);
+}
+@end
+@implementation ABPersonViewController (ios6rotate)
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
+	return YES;
+}
+- (NSUInteger)supportedInterfaceOrientations	{	//NS_AVAILABLE_IOS(6_0);
+	return (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown);
+}
+@end*/
+
+@implementation UIActionSheet(ButtonState)
+- (void)setButton:(NSInteger)buttonIndex toState:(BOOL)enabled {
+    for (UIView* view in self.subviews)
+    {
+        if ([view isKindOfClass:[UIButton class]])
+        {
+            if (buttonIndex == 0) {
+                if ([view respondsToSelector:@selector(setEnabled:)])
+                {
+                    UIButton* button = (UIButton*)view;
+                    button.enabled = enabled;
+                }
+            }
+            buttonIndex--;
+        }
+    }
+}
 @end

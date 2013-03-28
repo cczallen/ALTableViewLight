@@ -98,6 +98,8 @@
 #define isIPadDevice ([[[UIDevice currentDevice] model] isEqualToString:@"iPad"])
 #define isIPhoneUI (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 #define isIPhoneDevice ([[[UIDevice currentDevice] model] isEqualToString:@"iPhone"])
+#define is4InchScreen ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
+
 // 判斷是否模擬器
 #define isSimulator (NSNotFound != [[[UIDevice currentDevice] model] rangeOfString:@"Simulator"].location )
 //
@@ -105,6 +107,7 @@
 #define IsIOS6Later	([ALUtilities isIOS6Later])
 #define degreesToRadians(x) ((x) * (M_PI / 180.0))
 #define IsLandscape UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarFrame])
+#define CanOpenGoogleMapsApp	[[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"comgooglemaps://"]]	//ios6
 
 #define SaveLanguageSettings(langName) \
 		[[NSUserDefaults standardUserDefaults] setValue:langName forKey:@"TransTableName"],[[NSUserDefaults standardUserDefaults] synchronize]

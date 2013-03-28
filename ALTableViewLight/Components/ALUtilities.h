@@ -1,6 +1,6 @@
 //
 //  ALUtilities.h
-//  
+//
 //
 //  Created by AllenLion on 12/9/18.
 //  Copyright (c) 2012年 AllenLee. All rights reserved.
@@ -11,7 +11,7 @@
 
 UIKIT_EXTERN NSString *NSStringFromInt(NSInteger num);
 UIKIT_EXTERN NSString *NSStringFromFloat(CGFloat num);
-
+UIKIT_EXTERN double km2mile(double km);
 
 @interface ALUtilities : NSObject	// 20120918
 
@@ -22,8 +22,13 @@ UIKIT_EXTERN NSString *NSStringFromFloat(CGFloat num);
 +(BOOL)isIOS5Later;
 +(BOOL)isIOS6Later;
 
-//block
+//delay
 +(void)runBlockAfterDelay:(NSTimeInterval)delay block:(void (^)(void))block;
+
+//background task
++ (void)beginBackgroundTask;
++ (void)beginBackgroundTaskWithUnlimitedTime;
++ (void)endBackgroundTask;
 
 //檢核用
 + (BOOL)checkUnicharIsNumeric:(unichar)c;
@@ -44,6 +49,11 @@ UIKIT_EXTERN NSString *NSStringFromFloat(CGFloat num);
 + (NSString *)NSDateToStrDateAndTime:(NSDate *)date;
 + (NSDate *)NSStringToNSDate:(NSString *)strDate;
 + (NSDate *)NSStringToNSDateTime:(NSString *)strDate;
++ (CGRect)getSquareRect:(CGRect)rect;
+
+extern NSString* CTSettingCopyMyPhoneNumber();	//CoreTelephony.framework
+//+ (NSString *)MyPhoneNumber;
++ (BOOL)call:(NSString *)strNumber;
 @end
 
 @interface UIView (frameMethods)
@@ -66,6 +76,7 @@ UIKIT_EXTERN NSString *NSStringFromFloat(CGFloat num);
 
 -(void)showPoint:(CGPoint)pt;
 + (void)setCAAnimationDuration:(NSTimeInterval)dura;
++ (NSTimeInterval)getCAAnimationDuration;
 - (void)addCAAnimationFromTop;
 - (void)addCAAnimationFromBottom;
 - (void)addCAAnimationFromLeft;
@@ -85,7 +96,9 @@ UIKIT_EXTERN NSString *NSStringFromFloat(CGFloat num);
 + (UIImage *)reSizeImage:(UIImage *)image toSize:(CGSize)reSize;
 + (UIImage *)imageWithContentsOfFileByPNGNamed:(NSString *)imgName;
 + (UIImage *)imageWithContentsOfFileByJPGNamed:(NSString *)imgName;
-- (UIImage *)imageWithCropToSquare;
+//- (UIImage *)imageWithCropToSquare;
+- (UIImage *)imageWithCropToSquareScaleAspectFill;
+//- (UIImage *)imageWithCropToSquareScaleAspectFit;	// 20130325
 + (UIImage *)resizableImagebyName:(NSString *)imgName;
 @end
 
@@ -108,6 +121,10 @@ UIKIT_EXTERN NSString *NSStringFromFloat(CGFloat num);
 @interface UIButton (BlockTargetAction)
 -(void)setClickAction:(void (^)(id sender))action;
 -(void)removeClickAction;// 20121101
+-(void)clickAction;
+@end
+@interface UIButton (ALRoundedButton)
++ (UIButton *)createRoundedButtonWithFrame:(CGRect)rect;
 @end
 
 @interface NSMutableDictionary (formatVersion)
@@ -124,27 +141,28 @@ UIKIT_EXTERN NSString *NSStringFromFloat(CGFloat num);
 - (NSString*)description;
 - (NSArray *)sortedKeys;
 - (NSArray *)sortedKeysByDescending;
+- (NSArray *)sortedKeysByAscending;
 @end
 
 @interface NSString (verifyCheck)
 
-- (BOOL)find:(NSString *)str;
 - (NSString *)trim;
 - (BOOL)checkPID;
+- (NSString*)stringFromSha256;
 @end
 
 @interface NSObject (descriptionMemberList)
 //- (NSString *)descriptionMemberList;
 @end
-/*
-#import <MapKit/MapKit.h>
+
+/*#import <MapKit/MapKit.h>
 @interface MKMapView (zoomToFitMapAnnotations)
 
 - (void)zoomToFitMapAnnotations;
 - (void)zoomToFitMapAnnotations:(MKMapView *)mapView;	// http://stackoverflow.com/a/7200744
 - (void)moveToCoordinateWithAnimation:(CLLocationCoordinate2D)coor;
-@end
-*/
+@end*/
+
 @interface UILabel (alignTop)
 //http://fstoke.me/blog/?p=2819
 // adjust the height of a multi-line label to make it align vertical with top
@@ -153,4 +171,21 @@ UIKIT_EXTERN NSString *NSStringFromFloat(CGFloat num);
 
 @interface NSDate (theSameDay)
 - (BOOL)isSameDay:(NSDate*)date2;
+@end
+
+@interface UIImagePickerController (ios6rotate)
+@end
+
+/*#import <MessageUI/MessageUI.h>
+@interface MFMessageComposeViewController (ios6rotate)
+@end
+
+#import <AddressBookUI/AddressBookUI.h>
+@interface ABPeoplePickerNavigationController (ios6rotate)
+@end
+@interface ABPersonViewController (ios6rotate)
+@end*/
+
+@interface UIActionSheet(ButtonState)	//http://stackoverflow.com/a/9380142
+- (void)setButton:(NSInteger)buttonIndex toState:(BOOL)enbaled;
 @end
