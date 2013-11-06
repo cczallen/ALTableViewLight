@@ -28,7 +28,6 @@
 		73ECAC2D16B919B500752CB3 /* ALBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 73ECAC1716B919B500752CB3 /* ALBadgeView.m */; };
 		73ECAC2E16B919B500752CB3 /* badge.png in Resources */ = {isa = PBXBuildFile; fileRef = 73ECAC1816B919B500752CB3 /* badge.png */; };
 		73ECAC2F16B919B500752CB3 /* badge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73ECAC1916B919B500752CB3 /* badge@2x.png */; };
-		73ECAC3016B919B500752CB3 /* ALBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 73ECAC1B16B919B500752CB3 /* ALBarButtonItem.m */; };
 		73ECAC3116B919B500752CB3 /* ALNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 73ECAC1D16B919B500752CB3 /* ALNavigationController.m */; };
 		73ECAC3216B919B500752CB3 /* ALNavigationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73ECAC1E16B919B500752CB3 /* ALNavigationController.xib */; };
 		73ECAC3316B919B500752CB3 /* ALRotationNavigationController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73ECAC1F16B919B500752CB3 /* ALRotationNavigationController.xib */; };
@@ -47,6 +46,11 @@
 		73ECAC6B16B91F7200752CB3 /* ZXObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 73ECAC4A16B91F7200752CB3 /* ZXObject.m */; };
 		73ECAC6C16B91F7200752CB3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 73ECAC4B16B91F7200752CB3 /* README.md */; };
 		73ECAC7D16B91FA900752CB3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73ECAC7C16B91FA900752CB3 /* QuartzCore.framework */; };
+		73F02BF2174E239D00847364 /* ALBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 73F02BED174E239D00847364 /* ALBarButtonItem.m */; };
+		73F02BF3174E239D00847364 /* BarButtonItemDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = 73F02BEE174E239D00847364 /* BarButtonItemDefault.png */; };
+		73F02BF4174E239D00847364 /* BarButtonItemDefault@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73F02BEF174E239D00847364 /* BarButtonItemDefault@2x.png */; };
+		73F02BF5174E239D00847364 /* BarButtonItemDefaultSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 73F02BF0174E239D00847364 /* BarButtonItemDefaultSelected.png */; };
+		73F02BF6174E239D00847364 /* BarButtonItemDefaultSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 73F02BF1174E239D00847364 /* BarButtonItemDefaultSelected@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,8 +84,6 @@
 		73ECAC1716B919B500752CB3 /* ALBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALBadgeView.m; sourceTree = "<group>"; };
 		73ECAC1816B919B500752CB3 /* badge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = badge.png; sourceTree = "<group>"; };
 		73ECAC1916B919B500752CB3 /* badge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "badge@2x.png"; sourceTree = "<group>"; };
-		73ECAC1A16B919B500752CB3 /* ALBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALBarButtonItem.h; sourceTree = "<group>"; };
-		73ECAC1B16B919B500752CB3 /* ALBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALBarButtonItem.m; sourceTree = "<group>"; };
 		73ECAC1C16B919B500752CB3 /* ALNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALNavigationController.h; sourceTree = "<group>"; };
 		73ECAC1D16B919B500752CB3 /* ALNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALNavigationController.m; sourceTree = "<group>"; };
 		73ECAC1E16B919B500752CB3 /* ALNavigationController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ALNavigationController.xib; sourceTree = "<group>"; };
@@ -113,6 +115,12 @@
 		73ECAC4A16B91F7200752CB3 /* ZXObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXObject.m; sourceTree = "<group>"; };
 		73ECAC4B16B91F7200752CB3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		73ECAC7C16B91FA900752CB3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		73F02BEC174E239D00847364 /* ALBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALBarButtonItem.h; sourceTree = "<group>"; };
+		73F02BED174E239D00847364 /* ALBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALBarButtonItem.m; sourceTree = "<group>"; };
+		73F02BEE174E239D00847364 /* BarButtonItemDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BarButtonItemDefault.png; sourceTree = "<group>"; };
+		73F02BEF174E239D00847364 /* BarButtonItemDefault@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BarButtonItemDefault@2x.png"; sourceTree = "<group>"; };
+		73F02BF0174E239D00847364 /* BarButtonItemDefaultSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BarButtonItemDefaultSelected.png; sourceTree = "<group>"; };
+		73F02BF1174E239D00847364 /* BarButtonItemDefaultSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BarButtonItemDefaultSelected@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,9 +234,8 @@
 		73ECAC1416B919B500752CB3 /* ALComponents */ = {
 			isa = PBXGroup;
 			children = (
+				73F02BEB174E239D00847364 /* ALBarButtonItem */,
 				73ECAC1516B919B500752CB3 /* ALBadgeView */,
-				73ECAC1A16B919B500752CB3 /* ALBarButtonItem.h */,
-				73ECAC1B16B919B500752CB3 /* ALBarButtonItem.m */,
 				73ECAC1C16B919B500752CB3 /* ALNavigationController.h */,
 				73ECAC1D16B919B500752CB3 /* ALNavigationController.m */,
 				73ECAC1E16B919B500752CB3 /* ALNavigationController.xib */,
@@ -285,6 +292,19 @@
 				73ECAC4A16B91F7200752CB3 /* ZXObject.m */,
 			);
 			path = BlockUI;
+			sourceTree = "<group>";
+		};
+		73F02BEB174E239D00847364 /* ALBarButtonItem */ = {
+			isa = PBXGroup;
+			children = (
+				73F02BEC174E239D00847364 /* ALBarButtonItem.h */,
+				73F02BED174E239D00847364 /* ALBarButtonItem.m */,
+				73F02BEE174E239D00847364 /* BarButtonItemDefault.png */,
+				73F02BEF174E239D00847364 /* BarButtonItemDefault@2x.png */,
+				73F02BF0174E239D00847364 /* BarButtonItemDefaultSelected.png */,
+				73F02BF1174E239D00847364 /* BarButtonItemDefaultSelected@2x.png */,
+			);
+			path = ALBarButtonItem;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -355,6 +375,10 @@
 				73ECAC3616B919B500752CB3 /* ALTableViewController.xib in Resources */,
 				73ECAC6816B91F7200752CB3 /* .gitignore in Resources */,
 				73ECAC6C16B91F7200752CB3 /* README.md in Resources */,
+				73F02BF3174E239D00847364 /* BarButtonItemDefault.png in Resources */,
+				73F02BF4174E239D00847364 /* BarButtonItemDefault@2x.png in Resources */,
+				73F02BF5174E239D00847364 /* BarButtonItemDefaultSelected.png in Resources */,
+				73F02BF6174E239D00847364 /* BarButtonItemDefaultSelected@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,7 +394,6 @@
 				73ECAC1016B9193400752CB3 /* FirstViewController.m in Sources */,
 				73ECAC1316B9193400752CB3 /* SecondViewController.m in Sources */,
 				73ECAC2D16B919B500752CB3 /* ALBadgeView.m in Sources */,
-				73ECAC3016B919B500752CB3 /* ALBarButtonItem.m in Sources */,
 				73ECAC3116B919B500752CB3 /* ALNavigationController.m in Sources */,
 				73ECAC3416B919B500752CB3 /* ALTabBarController.m in Sources */,
 				73ECAC3516B919B500752CB3 /* ALTableViewController.m in Sources */,
@@ -384,6 +407,7 @@
 				73ECAC6A16B91F7200752CB3 /* BUIView.m in Sources */,
 				73ECAC6B16B91F7200752CB3 /* ZXObject.m in Sources */,
 				730B529216E99B420080049D /* ALTableViewLight.m in Sources */,
+				73F02BF2174E239D00847364 /* ALBarButtonItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

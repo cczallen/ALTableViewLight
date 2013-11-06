@@ -3,7 +3,7 @@
 //  
 //
 //  Created by 亞霖 李 on 12/3/20.
-//  Copyright (c) 2012年 SYSTEX 精誠資訊. All rights reserved.
+//  Copyright (c) 2012年  All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
